@@ -4,7 +4,7 @@
 import re
 import numpy as np
 import pandas as pd
-import os
+import os, sys
 trainfile = "adult.data"
 testfile = "adult.test"
 FEATURES = 14
@@ -22,8 +22,9 @@ def preprocessing():	# delete unknown lines and discretize continous features
 	global test_data
 	try:
 		f = open(trainfile, "r")
-	except:
-		os.exit()
+	except Exception, e:
+		print e
+		sys.exit()
 	data1 = f.readlines()
 	size1 = len(data1)
 	i = 0
@@ -39,8 +40,9 @@ def preprocessing():	# delete unknown lines and discretize continous features
 
 	try:
 		f = open(testfile, "r")
-	except:
-		os.exit()
+	except Exception, e:
+		print e
+		sys.exit()
 	data2 = f.readlines()
 	data2.pop(0)	# first line of the train set is not data
 	size2 = len(data2)

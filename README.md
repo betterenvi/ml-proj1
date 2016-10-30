@@ -2,7 +2,7 @@
 
 #### 朴素贝叶斯算法实现
 - 代码：bayes.py
-- 运行：python bayes.py
+- 运行(Python 2)：python bayes.py
 
 
 #### 使用sklearn
