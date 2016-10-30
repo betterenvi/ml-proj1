@@ -58,15 +58,18 @@ def preprocessing():	# delete unknown lines and discretize continous features
 	test_set = []
 	for line in data1:
 		line = line.strip()
+		if line == '': continue
 		feature_list = re.split(", ", line)
 		train_set.append(feature_list)
 
 	for line in data2:
 		line = line.strip()
+		if line == '': continue
 		feature_list = re.split(", ", line)
 		test_set.append(feature_list)
 
 	train_set.extend(test_set) # discretize two sets in one batch
+
 	data_total = discretizeData(train_set, continuous_index, bins)
 	train_data = data_total[:size1]
 	test_data = data_total[size1:]
