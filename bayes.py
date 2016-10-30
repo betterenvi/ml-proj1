@@ -4,7 +4,7 @@
 import re
 import numpy as np
 import pandas as pd
-
+import os
 trainfile = "adult.data"
 testfile = "adult.test"
 FEATURES = 14
@@ -36,7 +36,7 @@ def preprocessing():	# delete unknown lines and discretize continous features
 	f.close()
 #	data1 = list(set(data1))
 #	size1 = len(data1)
-	
+
 	try:
 		f = open(testfile, "r")
 	except:
@@ -53,27 +53,27 @@ def preprocessing():	# delete unknown lines and discretize continous features
 			size2 -= 1
 	#data2 = list(set(data2))
 	f.close()
-	
+
 	train_set = []
 	test_set = []
 	for line in data1:
 		line = line.strip()
 		feature_list = re.split(", ", line)
 		train_set.append(feature_list)
-		
+
 	for line in data2:
 		line = line.strip()
 		feature_list = re.split(", ", line)
 		test_set.append(feature_list)
- 
+
 	train_set.extend(test_set) # discretize two sets in one batch
-	data_total = discretizeData(train_set, continuous_index, bins)	
+	data_total = discretizeData(train_set, continuous_index, bins)
 	train_data = data_total[:size1]
 	test_data = data_total[size1:]
 
-def discretizeFeature(data_of_feature, bin_num):	
+def discretizeFeature(data_of_feature, bin_num):
 	return pd.cut(data_of_feature, bin_num)
-	
+
 def discretizeData(data, continue_feature_list, bins):
 	for feature_i_index in range(len(continue_feature_list)):
 		feature = continue_feature_list[feature_i_index]
@@ -84,9 +84,9 @@ def discretizeData(data, continue_feature_list, bins):
 		discretized_feature_i = discretizeFeature(data_of_feature_i,bins[feature_i_index])
 		for i in range(size):
 			data[i][feature] = str(discretized_feature_i[i])
-			
+
 	return data
-	
+
 def gen_clean_data():
 	global test_data
 	global test_ans
@@ -96,10 +96,10 @@ def gen_clean_data():
 	global train_1
 	global test_0
 	global test_1
-	
-	print "Generating clean data..."
+
+	print( "Generating clean data...")
 	preprocessing()
-	
+
 	size = len(train_data)
 	for i in range(size):
 		if train_data[i][-1][0] == ">":
@@ -108,7 +108,7 @@ def gen_clean_data():
 		else:
 			train_ans.append(0)
 			train_0 += 1
-	
+
 	size = len(test_data)
 	for i in range(size):
 		if test_data[i][-1][0] == ">":
@@ -117,7 +117,7 @@ def gen_clean_data():
 		else:
 			test_ans.append(0)
 			test_0 += 1
-	
+
 def train():
 	global features_0
 	global features_1
@@ -137,12 +137,12 @@ def train():
 					features_1[j][ele[j]] = 1
 				else:
 					features_1[j][ele[j]] += 1
-	
+
 def test():
 	global test_res
 	train_p_0 = train_0 * 1.0 / (train_0 + train_1)
 	train_p_1 = train_1 * 1.0 / (train_0 + train_1)
-	
+
 	print "Start testing..."
 	for i in range(len(test_data)):
 		ele = test_data[i]
@@ -155,14 +155,14 @@ def test():
 #				product_0 *= 1.0 / train_0
 			else:
 				product_0 *=  (features_0[j][ele[j]] * 1.0 / train_0)
-			
+
 			# cal product_1
 			if ele[j] not in features_1[j]:
 				product_1 = 0.0
 #				product_1 *= 1.0 / train_1
 			else:
 				product_1 *= (features_1[j][ele[j]] * 1.0 / train_1)
-		
+
 		product_0 *= train_p_0
 		product_1 *= train_p_1
 		p_0 = product_0 / (product_0 + product_1)
@@ -196,7 +196,7 @@ def cal():	# Calculate Accuracy, Precision, Recall, F-score
 	print "Precision: " + "%.3f%%"%(precision * 100)
 	print "Recall: " + "%.3f%%"%(recall * 100)
 	print "F-score: " + "%.3f"%(2 * precision * recall / (precision + recall))
-	
+
 if __name__ == "__main__":
 	gen_clean_data()
 	train()
