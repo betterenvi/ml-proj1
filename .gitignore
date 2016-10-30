@@ -36,3 +36,4 @@ adult.names
 adult.test
 .ipynb_checkpoints/*
 *.pdf
+*.docx
